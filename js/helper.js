@@ -24,7 +24,7 @@ var HTMLlocation = '<li class="flex-item"><span class="orange-text">location</sp
 var HTMLbioPic = '<img src="%data%" class="biopic">';
 var HTMLwelcomeMsg = '<span class="welcome-message">%data%</span>';
 
-var HTMLskillsStart = '<h3 id="skills-h3">Skills at a Glance:</h3><ul id="skills" class="flex-box-column"></ul>';
+var HTMLskillsStart = '<h3><span class="skills">Skills at a Glance:</span></h3><ul id="skills" class="flex-box-column"></ul>';
 var HTMLskills = '<li class="flex-item"><span class="white-text">%data%</span></li>';
 
 var HTMLworkStart = '<div class="work-entry"></div>';
@@ -47,9 +47,9 @@ var HTMLschoolDates = '<div class="date-text">%data%</div>';
 var HTMLschoolLocation = '<div class="location-text">%data%</div>';
 var HTMLschoolMajor = '<em><br>Major: %data%</em>';
 
-var HTMLonlineClasses = '<h3 id="online-h3">Online Classes</h3>';
+var HTMLonlineClasses = '<br><h2>Online Classes</h2>';
 var HTMLonlineTitle = '<a href="http://www.%url%">%title%';
-var HTMLonlineSchool = ' - %data%</a>';
+var HTMLonlineSchool = '&nbsp;&ndash;&nbsp;%data%</a>';
 var HTMLonlineDates = '<div class="date-text">%data%</div><br>';
 var HTMLonlineUrl = '<a class="url-text" href="http://www.%url%">%text%</a><br>';
 
@@ -132,16 +132,49 @@ function initializeMap() {
       title: name
     });
 
+    // Set the content for the Google InfoWindow based on the location
+    var contentString = "Unknown location";
+    var knownLocations = {
+      "cities": [{
+        "city": "Madison",
+        "slogan": "Home of Bucky Badger!"
+      }, {
+        "city": "Sunnyvale",
+        "slogan": "Silicon Valley - where geeks rule!"
+      }, {
+        "city": "Minneapolis",
+        "slogan": "Home of the Minnesota Golden Gophers!"
+      }, {
+        "city": "New York",
+        "slogan": "The city that never sleeps!"
+      }, {
+        "city": "Corvallis",
+        "slogan": "Home of the OSU Beavers!"
+      }, {
+        "city": "Colorado",
+        "slogan": "Home of the mile high city...in more ways than one!"
+      }, {
+        "city": "Fort Collins",
+        "slogan": "Microbrewing capital of the world!"
+      }]
+    };
+    knownLocations.cities.forEach( function(place) {
+      if (marker.title.includes(place.city)) {
+        contentString = place.city + " - " + place.slogan;
+      }
+    });
+
     // infoWindows are the little helper windows that open when you click
     // or hover over a pin on a map. They usually contain more information
     // about a location.
     var infoWindow = new google.maps.InfoWindow({
-      content: name
+      content: contentString
     });
 
     // hmmmm, I wonder what this is about...
     google.maps.event.addListener(marker, 'click', function() {
       // your code goes here!
+      infoWindow.open(map, marker);
     });
 
     // this is where the pin actually gets added to the map.
